@@ -1,0 +1,25 @@
+{
+    "name": "Yahoo Player Values",
+    "description": "Extension to display player values in dollar amounts on Yahoo Fantasy pages",
+    "version": "0.1",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://baseball.fantasysports.yahoo.com/b1/*"
+            ],
+            "js": [
+                "playerValue.js"
+            ]
+        }
+    ],
+    "host_permissions": [
+        "http://priceguide.herokuapp.com/*"
+    ],
+    "permissions": [
+        "storage"
+    ]
+}
