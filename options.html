@@ -104,11 +104,20 @@
         <h2>Extension Settings</h2>
         
         <div class="form-group">
-            <label for="apiBase">Player Data API URL:</label>
+            <label for="draftValueUrl">Draft Value API URL:</label>
             <input 
                 type="text" 
-                id="apiBase" 
-                placeholder="https://example.com/player-data.json"
+                id="draftValueUrl" 
+                placeholder="https://example.com/draft-values.json"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="currentValueUrl">Current Value API URL:</label>
+            <input 
+                type="text" 
+                id="currentValueUrl" 
+                placeholder="https://example.com/current-values.json"
             />
         </div>
 
@@ -120,7 +129,7 @@
         <div id="status" class="status"></div>
 
         <div class="info">
-            <strong>ℹ️ Info:</strong> This URL should point to a JSON file containing player data with fields: YAHOOID and Adjusted (dollar value).
+            <strong>ℹ️ Info:</strong> Both URLs should point to JSON files containing player data with fields: YAHOOID and Adjusted (dollar value). Draft values are for pre-season projections, current values are for in-season performance.
         </div>
     </div>
 

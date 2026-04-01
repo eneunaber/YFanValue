@@ -1,4 +1,5 @@
-var playersMap = {};
+var draftValuesMap = {};
+var currentValuesMap = {};
 var observer = null;
 let debounceTimer = null;
 const DEBOUNCE_DELAY = 500; // milliseconds
@@ -10,12 +11,14 @@ getPlayerValues().then(playerValues => {
         return;
     }
     try {
-        playersMap = JSON.parse(playerValues.PlayerValues);
-        const recordCount = Object.keys(playersMap).length;
-        if (recordCount === 0) {
-            console.warn('No player data loaded - player map is empty');
+        draftValuesMap = JSON.parse(playerValues.DraftValues);
+        currentValuesMap = JSON.parse(playerValues.CurrentValues);
+        const draftCount = Object.keys(draftValuesMap).length;
+        const currentCount = Object.keys(currentValuesMap).length;
+        if (draftCount === 0 && currentCount === 0) {
+            console.warn('No player data loaded - both value maps are empty');
         } else {
-            console.log('Loaded ' + recordCount + ' player records');
+            console.log('Loaded ' + draftCount + ' draft records and ' + currentCount + ' current records');
         }
         attachPagingEvents()
         showValues()
@@ -58,7 +61,7 @@ function attachPagingEvents() {
 function showValues() {
     try {
         // Skip if player data not loaded
-        if (Object.keys(playersMap).length === 0) {
+        if (Object.keys(draftValuesMap).length === 0 && Object.keys(currentValuesMap).length === 0) {
             console.debug('Skipping showValues - no player data loaded');
             return;
         }
@@ -75,13 +78,24 @@ function showValues() {
                     matches++;
                     let playerID = isPlayer[1]
                     
-                    if (playersMap[playerID] != null) {
-                        var dollarValue = playersMap[playerID];
+                    const draftValue = draftValuesMap[playerID];
+                    const currentValue = currentValuesMap[playerID];
+                    
+                    if (draftValue != null || currentValue != null) {
+                        // Create combined value string
+                        let combinedValue = '';
+                        if (draftValue != null) {
+                            combinedValue += `[${draftValue}]`;
+                        }
+                        if (currentValue != null) {
+                            combinedValue += `[${currentValue}]`;
+                        }
+                        
                         // Use textContent for safety, check if value already exists
-                        if (!tags[i].textContent.includes(dollarValue)) {
+                        if (!tags[i].textContent.includes(combinedValue)) {
                             // Append the value using safer DOM method
                             const spanElem = document.createElement('span');
-                            spanElem.textContent = ` [${dollarValue}]`;
+                            spanElem.textContent = ` ${combinedValue}`;
                             spanElem.className = 'player-value';
                             tags[i].appendChild(spanElem);
                             updated++;

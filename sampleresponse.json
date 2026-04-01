@@ -1,0 +1,142 @@
+[
+  {
+    "YAHOOID": "10000001",
+    "Adjusted": 25.5,
+    "Name": "Shohei Ohtani",
+    "Team": "LAD",
+    "Position": "SP/DH"
+  },
+  {
+    "YAHOOID": "10000002",
+    "Adjusted": 22.8,
+    "Name": "Mookie Betts",
+    "Team": "LAD",
+    "Position": "RF"
+  },
+  {
+    "YAHOOID": "10000003",
+    "Adjusted": 20.2,
+    "Name": "Juan Soto",
+    "Team": "NYY",
+    "Position": "LF"
+  },
+  {
+    "YAHOOID": "10000004",
+    "Adjusted": 18.7,
+    "Name": "Ronald Acuña Jr.",
+    "Team": "ATL",
+    "Position": "RF"
+  },
+  {
+    "YAHOOID": "10000005",
+    "Adjusted": 16.9,
+    "Name": "Freddie Freeman",
+    "Team": "LAD",
+    "Position": "1B"
+  },
+  {
+    "YAHOOID": "10000006",
+    "Adjusted": 15.4,
+    "Name": "Gerrit Cole",
+    "Team": "NYY",
+    "Position": "SP"
+  },
+  {
+    "YAHOOID": "10000007",
+    "Adjusted": 14.1,
+    "Name": "Trea Turner",
+    "Team": "PHI",
+    "Position": "SS"
+  },
+  {
+    "YAHOOID": "10000008",
+    "Adjusted": 12.8,
+    "Name": "Manny Machado",
+    "Team": "SD",
+    "Position": "3B"
+  },
+  {
+    "YAHOOID": "10000009",
+    "Adjusted": 11.5,
+    "Name": "Nolan Arenado",
+    "Team": "STL",
+    "Position": "3B"
+  },
+  {
+    "YAHOOID": "10000010",
+    "Adjusted": 10.2,
+    "Name": "Francisco Lindor",
+    "Team": "CLE",
+    "Position": "SS"
+  },
+  {
+    "YAHOOID": "10000011",
+    "Adjusted": 8.9,
+    "Name": "Bryce Harper",
+    "Team": "PHI",
+    "Position": "RF"
+  },
+  {
+    "YAHOOID": "10000012",
+    "Adjusted": 7.6,
+    "Name": "Max Scherzer",
+    "Team": "TEX",
+    "Position": "SP"
+  },
+  {
+    "YAHOOID": "10000013",
+    "Adjusted": 6.3,
+    "Name": "Jose Ramirez",
+    "Team": "CLE",
+    "Position": "3B"
+  },
+  {
+    "YAHOOID": "10000014",
+    "Adjusted": 5.0,
+    "Name": "Christian Yelich",
+    "Team": "MIL",
+    "Position": "LF"
+  },
+  {
+    "YAHOOID": "10000015",
+    "Adjusted": 3.7,
+    "Name": "Alex Bregman",
+    "Team": "HOU",
+    "Position": "3B"
+  },
+  {
+    "YAHOOID": "10000016",
+    "Adjusted": 2.4,
+    "Name": "Anthony Rendon",
+    "Team": "LAA",
+    "Position": "3B"
+  },
+  {
+    "YAHOOID": "10000017",
+    "Adjusted": 1.1,
+    "Name": "Kris Bryant",
+    "Team": "COL",
+    "Position": "3B"
+  },
+  {
+    "YAHOOID": "10000018",
+    "Adjusted": -0.2,
+    "Name": "Carlos Correa",
+    "Team": "MIN",
+    "Position": "SS"
+  },
+  {
+    "YAHOOID": "10000019",
+    "Adjusted": -1.5,
+    "Name": "Trevor Story",
+    "Team": "BOS",
+    "Position": "SS"
+  },
+  {
+    "YAHOOID": "10000020",
+    "Adjusted": -2.8,
+    "Name": "Giancarlo Stanton",
+    "Team": "NYY",
+    "Position": "RF"
+  }
+]

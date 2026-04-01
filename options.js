@@ -1,8 +1,10 @@
-// Default API URL
-const DEFAULT_API_BASE = "https://prod-elneunie-fantasybaseballleaguestats.s3.us-east-2.amazonaws.com/CPL-current.json";
+// Default API URLs
+const DEFAULT_DRAFT_URL = "https://prod-elneunie-fantasybaseballleaguestats.s3.us-east-2.amazonaws.com/CPL-current.json";
+const DEFAULT_CURRENT_URL = "https://prod-elneunie-fantasybaseballleaguestats.s3.us-east-2.amazonaws.com/CPL-current.json";
 
 // DOM elements
-const apiBaseInput = document.getElementById('apiBase');
+const draftValueInput = document.getElementById('draftValueUrl');
+const currentValueInput = document.getElementById('currentValueUrl');
 const saveButton = document.getElementById('save');
 const resetButton = document.getElementById('reset');
 const statusDiv = document.getElementById('status');
@@ -31,50 +33,61 @@ function loadSettings() {
 }
 
 function validateAndSaveSettings() {
-    const apiBase = apiBaseInput.value.trim();
+    const draftUrl = draftValueInput.value.trim();
+    const currentUrl = currentValueInput.value.trim();
 
-    if (!apiBase) {
-        showStatus('Please enter a valid URL', 'error');
+    if (!draftUrl || !currentUrl) {
+        showStatus('Please enter valid URLs for both draft and current values', 'error');
         return;
     }
 
-    if (!isValidUrl(apiBase)) {
-        showStatus('Please enter a valid URL (must start with http:// or https://)', 'error');
+    if (!isValidUrl(draftUrl) || !isValidUrl(currentUrl)) {
+        showStatus('Please enter valid URLs (must start with http:// or https://)', 'error');
         return;
     }
 
-    // Test the URL accessibility
+    // Test both URLs accessibility
     saveButton.disabled = true;
-    saveButton.textContent = 'Testing URL...';
+    saveButton.textContent = 'Testing URLs...';
     
-    fetch(apiBase, { method: 'HEAD' })
+    Promise.all([
+        testUrl(draftUrl),
+        testUrl(currentUrl)
+    ]).then(() => {
+        performSave(draftUrl, currentUrl);
+    }).catch(err => {
+        console.error('Error validating URLs:', err);
+        showStatus(`URL validation failed: ${err.message}`, 'error');
+        saveButton.disabled = false;
+        saveButton.textContent = 'Save Settings';
+    });
+}
+
+function testUrl(url) {
+    return fetch(url, { method: 'HEAD' })
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+                throw new Error(`HTTP ${response.status} for ${url}`);
             }
-            return performSave(apiBase);
+            return response;
         })
         .catch(err => {
-            // Try a GET request as fallback (HEAD might not be allowed)
-            return fetch(apiBase)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    return performSave(apiBase);
-                })
-                .catch(innerErr => {
-                    console.error('Error validating URL:', innerErr);
-                    showStatus(`URL is not accessible: ${innerErr.message}`, 'error');
-                    saveButton.disabled = false;
-                    saveButton.textContent = 'Save Settings';
-                });
+            // Try GET request as fallback
+            return fetch(url).then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status} for ${url}`);
+                }
+                return response;
+            });
         });
 }
 
-function performSave(apiBase) {
-    console.log('Saving settings:', apiBase);
-    chrome.storage.sync.set({ apiBase: apiBase }, () => {
+function performSave(draftUrl, currentUrl) {
+    console.log('Saving settings:', draftUrl, currentUrl);
+    chrome.storage.sync.set({ 
+        draftValueUrl: draftUrl,
+        currentValueUrl: currentUrl 
+    }, () => {
         saveButton.disabled = false;
         saveButton.textContent = 'Save Settings';
         
@@ -83,22 +96,25 @@ function performSave(apiBase) {
             showStatus('Error saving settings', 'error');
         } else {
             console.log('Settings saved successfully');
-            showStatus('✓ Settings saved successfully! URL is accessible and will be used on next run.', 'success');
+            showStatus('✓ Settings saved successfully! URLs are accessible and will be used on next run.', 'success');
         }
     });
-    return Promise.resolve();
 }
 
 function resetSettings() {
     console.log('Resetting to default settings');
-    apiBaseInput.value = DEFAULT_API_BASE;
-    chrome.storage.sync.set({ apiBase: DEFAULT_API_BASE }, () => {
+    draftValueInput.value = DEFAULT_DRAFT_URL;
+    currentValueInput.value = DEFAULT_CURRENT_URL;
+    chrome.storage.sync.set({ 
+        draftValueUrl: DEFAULT_DRAFT_URL,
+        currentValueUrl: DEFAULT_CURRENT_URL 
+    }, () => {
         if (chrome.runtime.lastError) {
             console.error('Error resetting settings:', chrome.runtime.lastError);
             showStatus('Error resetting settings', 'error');
         } else {
             console.log('Settings reset to default');
-            showStatus('Settings reset to default: ' + DEFAULT_API_BASE, 'success');
+            showStatus('Settings reset to default: ' + DEFAULT_DRAFT_URL + ' and ' + DEFAULT_CURRENT_URL, 'success');
         }
     });
 }
