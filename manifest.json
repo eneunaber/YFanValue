@@ -3,6 +3,7 @@
     "description": "Extension to display player values in dollar amounts on Yahoo Fantasy pages",
     "version": "0.1",
     "manifest_version": 3,
+    "options_page": "options.html",
     "background": {
         "service_worker": "background.js"
     },
@@ -17,7 +18,9 @@
         }
     ],
     "host_permissions": [
-        "http://priceguide.herokuapp.com/*"
+        "https://prod-elneunie-fantasybaseballleaguestats.s3.us-east-2.amazonaws.com/*",
+        "https://*/*",
+        "http://localhost/*"
     ],
     "permissions": [
         "storage"

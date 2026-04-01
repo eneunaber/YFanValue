@@ -1,5 +1,7 @@
 var playersMap = {};
-
+var observer = null;
+let debounceTimer = null;
+const DEBOUNCE_DELAY = 500; // milliseconds
 
 getPlayerValues().then(playerValues => {
     console.log("Finished retrieving player records")
@@ -9,7 +11,12 @@ getPlayerValues().then(playerValues => {
     }
     try {
         playersMap = JSON.parse(playerValues.PlayerValues);
-        console.log('loading ' + Object.keys(playersMap).length + ' records')
+        const recordCount = Object.keys(playersMap).length;
+        if (recordCount === 0) {
+            console.warn('No player data loaded - player map is empty');
+        } else {
+            console.log('Loaded ' + recordCount + ' player records');
+        }
         attachPagingEvents()
         showValues()
     } catch (err) {
@@ -21,12 +28,23 @@ getPlayerValues().then(playerValues => {
 
 function attachPagingEvents() {
     try {
+        // Clean up existing observer if any
+        if (observer) {
+            observer.disconnect();
+            observer = null;
+        }
+        
         var playersTable = document.getElementById("players-table-wrapper")
         if (playersTable) {
             let options = {
                 childList: true,
+                subtree: true,
             };
-            observer = new MutationObserver(showValues);
+            // Debounce showValues to avoid too many rapid calls
+            observer = new MutationObserver(() => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(showValues, DEBOUNCE_DELAY);
+            });
             observer.observe(playersTable, options);
             console.log('Paging events attached successfully');
         } else {
@@ -39,34 +57,44 @@ function attachPagingEvents() {
 
 function showValues() {
     try {
-        console.log('show player values')
+        // Skip if player data not loaded
+        if (Object.keys(playersMap).length === 0) {
+            console.debug('Skipping showValues - no player data loaded');
+            return;
+        }
+        
         var playerMatch = /.*sports\.yahoo\.com\/mlb\/players\/(\d{4,5})$/
         var tags = document.getElementsByTagName("a")
         var matches = 0;
+        var updated = 0;
+        
         for (var i = 0; i < tags.length; i++) {
             try {
                 var isPlayer = tags[i].href.match(playerMatch)
                 if (isPlayer) {
                     matches++;
                     let playerID = isPlayer[1]
-                    console.log("playerID:" + playerID)
+                    
                     if (playersMap[playerID] != null) {
                         var dollarValue = playersMap[playerID];
-                        if (tags[i].innerHTML.indexOf(dollarValue) < 0) {
-                            console.log("playerID:" + playerID + "||" + dollarValue)
-                            tags[i].innerHTML = tags[i].innerHTML + " [" + dollarValue + "]"
-                        } else {
-                            console.log("value exists for player:" + playerID);
+                        // Use textContent for safety, check if value already exists
+                        if (!tags[i].textContent.includes(dollarValue)) {
+                            // Append the value using safer DOM method
+                            const spanElem = document.createElement('span');
+                            spanElem.textContent = ` [${dollarValue}]`;
+                            spanElem.className = 'player-value';
+                            tags[i].appendChild(spanElem);
+                            updated++;
                         }
-                    } else {
-                        console.log("playerID: " + playerID + " Not found")
                     }
                 }
             } catch (err) {
                 console.error('Error processing player link element:', err);
             }
         }
-        console.log("player url matches found: " + matches)
+        if (matches > 0) {
+            console.debug(`Found ${matches} player links, updated ${updated}`);
+        }
     } catch (err) {
         console.error('Error in showValues:', err);
     }
