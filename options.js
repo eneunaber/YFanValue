@@ -20,14 +20,34 @@ resetButton.addEventListener('click', resetSettings);
 
 function loadSettings() {
     console.log('Loading settings...');
-    chrome.storage.sync.get(['apiBase'], (result) => {
+    
+    // Validate that defaults are not empty
+    if (!DEFAULT_DRAFT_URL || !DEFAULT_CURRENT_URL) {
+        console.error('Error: Default URLs are empty!');
+        showStatus('Error: Default configuration is missing. Please check the extension code.', 'error');
+        return;
+    }
+    
+    chrome.storage.sync.get(['draftValueUrl', 'currentValueUrl'], (result) => {
         if (chrome.runtime.lastError) {
             console.error('Error loading settings:', chrome.runtime.lastError);
             showStatus('Error loading settings', 'error');
-            apiBaseInput.value = DEFAULT_API_BASE;
+            draftValueInput.value = DEFAULT_DRAFT_URL;
+            currentValueInput.value = DEFAULT_CURRENT_URL;
         } else {
-            apiBaseInput.value = result.apiBase || DEFAULT_API_BASE;
-            console.log('Settings loaded:', result.apiBase || DEFAULT_API_BASE);
+            const draftUrl = result.draftValueUrl || DEFAULT_DRAFT_URL;
+            const currentUrl = result.currentValueUrl || DEFAULT_CURRENT_URL;
+            
+            // Validate loaded settings are not empty
+            if (!draftUrl || !currentUrl) {
+                console.warn('Loaded settings are empty, using defaults');
+                draftValueInput.value = DEFAULT_DRAFT_URL;
+                currentValueInput.value = DEFAULT_CURRENT_URL;
+            } else {
+                draftValueInput.value = draftUrl;
+                currentValueInput.value = currentUrl;
+                console.log('Settings loaded successfully:', draftUrl, currentUrl);
+            }
         }
     });
 }

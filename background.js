@@ -68,23 +68,23 @@ function buildPlayersHash(players, type) {
     var playerMap = {};
     players.forEach(function (player) {
         // Validate player has required fields
-        if (!player.YAHOOID || player.Adjusted === undefined || player.Adjusted === null) {
-            console.warn(`Skipping ${type} player with missing YAHOOID or Adjusted value:`, player);
+        if (!player.YAHOOID || player.Dollars === undefined || player.Dollars === null) {
+            console.warn(`Skipping ${type} player with missing YAHOOID or Dollars value:`, player);
             return;
         }
         
         let dollarValue = 0;
-        const adjusted = Number(player.Adjusted);
+        const dollars = Number(player.Dollars);
         
-        if (isNaN(adjusted)) {
-            console.warn(`Invalid Adjusted value for ${type} player:`, player.YAHOOID, player.Adjusted);
+        if (isNaN(dollars)) {
+            console.warn(`Invalid Dollars value for ${type} player:`, player.YAHOOID, player.Dollars);
             return;
         }
 
-        if (adjusted > 0) {
-            dollarValue = "$" + adjusted.toFixed(0);
-        } else if (adjusted < 0) {
-            dollarValue = "-$" + Math.abs(adjusted).toFixed(0);
+        if (dollars > 0) {
+            dollarValue = "$" + dollars.toFixed(0);
+        } else if (dollars < 0) {
+            dollarValue = "-$" + Math.abs(dollars).toFixed(0);
         } else {
             dollarValue = "$0";
         }
