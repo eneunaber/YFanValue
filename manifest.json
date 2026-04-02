@@ -3,9 +3,9 @@
     "description": "Extension to display player values in dollar amounts on Yahoo Fantasy pages",
     "version": "0.1",
     "manifest_version": 3,
-    "options_page": "options.html",
+    "options_page": "src/options/options.html",
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "src/background/background.js"
     },
     "content_scripts": [
         {
@@ -13,7 +13,7 @@
                 "https://baseball.fantasysports.yahoo.com/b1/*"
             ],
             "js": [
-                "playerValue.js"
+                "src/content/playerValue.js"
             ]
         }
     ],
