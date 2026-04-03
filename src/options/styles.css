@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-image:
+      radial-gradient(circle at top, rgba(37, 99, 235, 0.22), transparent 28rem),
+      linear-gradient(180deg, #020617 0%, #0f172a 100%);
+  }
+}

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yahoo Player Values Settings</title>
+  </head>
+  <body class="min-h-screen bg-slate-950 text-slate-100">
+    <main class="mx-auto flex min-h-screen max-w-4xl items-center px-6 py-12">
+      <section class="w-full overflow-hidden rounded-[28px] border border-white/10 bg-slate-900/80 shadow-card backdrop-blur">
+        <div class="bg-gradient-to-r from-brand-600 via-blue-500 to-cyan-400 px-8 py-10 text-slate-950">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em]">Yahoo Extension</p>
+          <h1 class="mt-3 text-4xl font-black tracking-tight">Player value feeds</h1>
+          <p class="mt-3 max-w-2xl text-sm font-medium text-slate-900/80">
+            Manage the draft and current-value JSON sources used by the extension on Yahoo Fantasy pages.
+          </p>
+        </div>
+
+        <div class="space-y-8 px-8 py-8">
+          <div class="grid gap-6 md:grid-cols-2">
+            <label class="block">
+              <span class="mb-2 block text-sm font-semibold text-slate-200">Draft value API URL</span>
+              <input
+                id="draftValueUrl"
+                type="url"
+                placeholder="https://example.com/draft-values.json"
+                class="w-full rounded-2xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30"
+              />
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-semibold text-slate-200">Current value API URL</span>
+              <input
+                id="currentValueUrl"
+                type="url"
+                placeholder="https://example.com/current-values.json"
+                class="w-full rounded-2xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30"
+              />
+            </label>
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <button
+              id="save"
+              type="button"
+              class="rounded-full bg-brand-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              Save settings
+            </button>
+            <button
+              id="reset"
+              type="button"
+              class="rounded-full border border-slate-600 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-slate-400 hover:bg-slate-800"
+            >
+              Reset defaults
+            </button>
+          </div>
+
+          <div
+            id="status"
+            class="hidden rounded-2xl border px-4 py-3 text-sm font-medium"
+            role="status"
+            aria-live="polite"
+          ></div>
+
+          <div class="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-4 text-sm text-cyan-100">
+            Both feeds should return JSON arrays containing <code class="font-semibold">YAHOOID</code> and
+            <code class="font-semibold">Dollars</code>.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./options.ts"></script>
+  </body>
+</html>
