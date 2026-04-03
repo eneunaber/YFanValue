@@ -6,6 +6,7 @@ import {
   DEFAULT_DRAFT_URL,
   DRAFT_STORAGE_KEY
 } from "../shared/config";
+import { getUrlsToTest, validatePlayerValueUrls } from "./urlValidation";
 
 const draftValueInput = getRequiredElement<HTMLInputElement>("draftValueUrl");
 const currentValueInput = getRequiredElement<HTMLInputElement>("currentValueUrl");
@@ -35,20 +36,16 @@ function loadSettings(): void {
 function validateAndSaveSettings(): void {
   const playerValueUrlOne = draftValueInput.value.trim();
   const playerValueUrlTwo = currentValueInput.value.trim();
+  const validationError = validatePlayerValueUrls(playerValueUrlOne, playerValueUrlTwo);
 
-  if (!playerValueUrlOne && !playerValueUrlTwo) {
-    showStatus("Please enter at least one valid URL.", "error");
-    return;
-  }
-
-  if (!isValidOptionalUrl(playerValueUrlOne) || !isValidOptionalUrl(playerValueUrlTwo)) {
-    showStatus("Please enter valid http or https URLs.", "error");
+  if (validationError) {
+    showStatus(validationError, "error");
     return;
   }
 
   setSaveState(true, "Testing URLs...");
 
-  Promise.all([testOptionalUrl(playerValueUrlOne), testOptionalUrl(playerValueUrlTwo)])
+  Promise.all(getUrlsToTest(playerValueUrlOne, playerValueUrlTwo).map((url) => testUrl(url)))
     .then(() => performSave(playerValueUrlOne, playerValueUrlTwo))
     .catch((error: Error) => {
       console.error("Error validating URLs:", error);
@@ -73,14 +70,6 @@ async function testUrl(url: string): Promise<void> {
   if (!getResponse.ok) {
     throw new Error(`HTTP ${getResponse.status} for ${url}`);
   }
-}
-
-function testOptionalUrl(url: string): Promise<void> {
-  if (!url) {
-    return Promise.resolve();
-  }
-
-  return testUrl(url);
 }
 
 function performSave(playerValueUrlOne: string, playerValueUrlTwo: string): void {
@@ -142,19 +131,6 @@ function showStatus(message: string, type: "success" | "error"): void {
       statusDiv.className = "hidden rounded-2xl border px-4 py-3 text-sm font-medium";
     }, 3000);
   }
-}
-
-function isValidUrl(value: string): boolean {
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
-
-function isValidOptionalUrl(value: string): boolean {
-  return !value || isValidUrl(value);
 }
 
 function getRequiredElement<T extends HTMLElement>(id: string): T {

@@ -23,6 +23,24 @@ describe("parsePlayerData", () => {
       "Invalid current player data:"
     );
   });
+
+  it("rejects rows missing Dollars", () => {
+    expect(() => parsePlayerData([{ YAHOOID: 1234 }], "draft")).toThrow(
+      "Invalid draft player data: 0.Dollars:"
+    );
+  });
+
+  it("rejects rows missing YAHOOID", () => {
+    expect(() => parsePlayerData([{ Dollars: 15 }], "draft")).toThrow(
+      "Invalid draft player data: 0.YAHOOID:"
+    );
+  });
+
+  it("rejects non-numeric Dollars values", () => {
+    expect(() => parsePlayerData([{ YAHOOID: 1234, Dollars: "oops" }], "current")).toThrow(
+      "Invalid current player data: 0.Dollars:"
+    );
+  });
 });
 
 describe("buildPlayersHash", () => {
@@ -43,16 +61,14 @@ describe("buildPlayersHash", () => {
     });
   });
 
-  it("skips invalid rows and logs warnings", () => {
+  it("skips rows with non-numeric values if invalid data bypasses parsing", () => {
     const warn = vi.fn();
 
     const result = buildPlayersHash(
       [
-        { Dollars: 10 },
-        { YAHOOID: 1002, Dollars: "oops" },
-        { YAHOOID: 1003, Dollars: null },
+        { YAHOOID: 1002, Dollars: "oops" } as never,
         { YAHOOID: 1004, Dollars: 7 }
-      ],
+      ] as never,
       "current",
       { warn }
     );
@@ -60,6 +76,6 @@ describe("buildPlayersHash", () => {
     expect(result).toEqual({
       "1004": "$7"
     });
-    expect(warn).toHaveBeenCalledTimes(3);
+    expect(warn).toHaveBeenCalledTimes(1);
   });
 });

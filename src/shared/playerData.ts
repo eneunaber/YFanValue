@@ -4,7 +4,9 @@ export function parsePlayerData(data: unknown, type: "draft" | "current"): Playe
   const parsedData = playerDataSchema.safeParse(data);
 
   if (!parsedData.success) {
-    throw new Error(`Invalid ${type} player data: ${parsedData.error.issues[0]?.message ?? "schema mismatch"}`);
+    const firstIssue = parsedData.error.issues[0];
+    const issuePath = firstIssue?.path.length ? `${firstIssue.path.join(".")}: ` : "";
+    throw new Error(`Invalid ${type} player data: ${issuePath}${firstIssue?.message ?? "schema mismatch"}`);
   }
 
   return parsedData.data;
@@ -18,11 +20,6 @@ export function buildPlayersHash(
   const playerMap: Record<string, string> = {};
 
   for (const player of players) {
-    if (player.YAHOOID == null || player.Dollars == null) {
-      logger.warn(`Skipping ${type} player with missing YAHOOID or Dollars value:`, player);
-      continue;
-    }
-
     const yahooId = String(player.YAHOOID);
     const dollars = Number(player.Dollars);
 

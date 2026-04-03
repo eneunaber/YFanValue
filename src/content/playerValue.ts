@@ -1,10 +1,9 @@
 import type { ErrorResponse, StoredPlayerValues } from "../shared/types";
+import { buildPlayerValueRenderModel, shouldUpdatePlayerValue } from "./playerValueRender";
 
 const playerLinkPattern = /.*sports\.yahoo\.com\/mlb\/players\/(\d{4,5})$/;
 const playerValueClassName = "player-value";
 const debounceDelay = 500;
-const positiveValueColor = "#16a34a";
-const negativeValueColor = "#dc2626";
 
 let draftValuesMap: Record<string, string> = {};
 let currentValuesMap: Record<string, string> = {};
@@ -72,12 +71,9 @@ function showValues(): void {
       continue;
     }
 
-    const combinedValue = [draftValue, currentValue]
-      .filter((value): value is string => value != null)
-      .map((value) => `[${value}]`)
-      .join("");
+    const renderModel = buildPlayerValueRenderModel(draftValue, currentValue);
 
-    if (!combinedValue || link.querySelector(`.${playerValueClassName}`)?.textContent === ` ${combinedValue}`) {
+    if (!shouldUpdatePlayerValue(link.querySelector(`.${playerValueClassName}`)?.textContent ?? null, renderModel.combinedText)) {
       continue;
     }
 
@@ -87,18 +83,18 @@ function showValues(): void {
     valueTag.className = playerValueClassName;
     valueTag.append(document.createTextNode(" "));
 
-    for (const value of [draftValue, currentValue].filter((item): item is string => item != null)) {
-      valueTag.appendChild(createValueBadge(value));
+    for (const badge of renderModel.badges) {
+      valueTag.appendChild(createValueBadge(badge.text, badge.color));
     }
 
     link.appendChild(valueTag);
   }
 }
 
-function createValueBadge(value: string): HTMLSpanElement {
+function createValueBadge(text: string, color: string): HTMLSpanElement {
   const badge = document.createElement("span");
-  badge.textContent = `[${value}]`;
-  badge.style.color = value.startsWith("-") ? negativeValueColor : positiveValueColor;
+  badge.textContent = text;
+  badge.style.color = color;
   return badge;
 }
 
