@@ -6,6 +6,7 @@ import {
   DRAFT_STORAGE_KEY,
   DRAFT_VALUES_KEY
 } from "../shared/config";
+import { buildPlayersHash, parsePlayerData } from "../shared/playerData";
 import type { PlayerRecord, StoredPlayerValues } from "../shared/types";
 
 let draftValueUrl = DEFAULT_DRAFT_URL;
@@ -54,42 +55,8 @@ async function fetchPlayerData(url: string, type: "draft" | "current"): Promise<
     throw new Error(`${type} URL HTTP error: ${response.status}`);
   }
 
-  const data = (await response.json()) as PlayerRecord[];
-
-  if (!Array.isArray(data)) {
-    throw new Error(`Expected ${type} player data to be an array`);
-  }
-
-  return data;
-}
-
-function buildPlayersHash(players: PlayerRecord[], type: "draft" | "current"): Record<string, string> {
-  const playerMap: Record<string, string> = {};
-
-  for (const player of players) {
-    if (player.YAHOOID == null || player.Dollars == null) {
-      console.warn(`Skipping ${type} player with missing YAHOOID or Dollars value:`, player);
-      continue;
-    }
-
-    const yahooId = String(player.YAHOOID);
-    const dollars = Number(player.Dollars);
-
-    if (Number.isNaN(dollars)) {
-      console.warn(`Invalid Dollars value for ${type} player:`, player.YAHOOID, player.Dollars);
-      continue;
-    }
-
-    if (dollars > 0) {
-      playerMap[yahooId] = `$${dollars.toFixed(0)}`;
-    } else if (dollars < 0) {
-      playerMap[yahooId] = `-$${Math.abs(dollars).toFixed(0)}`;
-    } else {
-      playerMap[yahooId] = "$0";
-    }
-  }
-
-  return playerMap;
+  const data: unknown = await response.json();
+  return parsePlayerData(data, type);
 }
 
 function savePlayerData(
