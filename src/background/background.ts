@@ -31,8 +31,8 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   }
 
   Promise.all([
-    fetchPlayerData(draftValueUrl, "draft"),
-    fetchPlayerData(currentValueUrl, "current")
+    fetchOptionalPlayerData(draftValueUrl, "draft"),
+    fetchOptionalPlayerData(currentValueUrl, "current")
   ])
     .then(([draftPlayers, currentPlayers]) => {
       const draftMap = buildPlayersHash(draftPlayers, "draft");
@@ -47,6 +47,14 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 
   return true;
 });
+
+function fetchOptionalPlayerData(url: string, type: "draft" | "current"): Promise<PlayerRecord[]> {
+  if (!url) {
+    return Promise.resolve([]);
+  }
+
+  return fetchPlayerData(url, type);
+}
 
 async function fetchPlayerData(url: string, type: "draft" | "current"): Promise<PlayerRecord[]> {
   const response = await fetch(url);

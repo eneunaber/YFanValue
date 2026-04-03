@@ -33,23 +33,23 @@ function loadSettings(): void {
 }
 
 function validateAndSaveSettings(): void {
-  const draftUrl = draftValueInput.value.trim();
-  const currentUrl = currentValueInput.value.trim();
+  const playerValueUrlOne = draftValueInput.value.trim();
+  const playerValueUrlTwo = currentValueInput.value.trim();
 
-  if (!draftUrl || !currentUrl) {
-    showStatus("Please enter valid URLs for both draft and current values.", "error");
+  if (!playerValueUrlOne && !playerValueUrlTwo) {
+    showStatus("Please enter at least one valid URL.", "error");
     return;
   }
 
-  if (!isValidUrl(draftUrl) || !isValidUrl(currentUrl)) {
+  if (!isValidOptionalUrl(playerValueUrlOne) || !isValidOptionalUrl(playerValueUrlTwo)) {
     showStatus("Please enter valid http or https URLs.", "error");
     return;
   }
 
   setSaveState(true, "Testing URLs...");
 
-  Promise.all([testUrl(draftUrl), testUrl(currentUrl)])
-    .then(() => performSave(draftUrl, currentUrl))
+  Promise.all([testOptionalUrl(playerValueUrlOne), testOptionalUrl(playerValueUrlTwo)])
+    .then(() => performSave(playerValueUrlOne, playerValueUrlTwo))
     .catch((error: Error) => {
       console.error("Error validating URLs:", error);
       showStatus(`URL validation failed: ${error.message}`, "error");
@@ -75,11 +75,19 @@ async function testUrl(url: string): Promise<void> {
   }
 }
 
-function performSave(draftUrl: string, currentUrl: string): void {
+function testOptionalUrl(url: string): Promise<void> {
+  if (!url) {
+    return Promise.resolve();
+  }
+
+  return testUrl(url);
+}
+
+function performSave(playerValueUrlOne: string, playerValueUrlTwo: string): void {
   chrome.storage.sync.set(
     {
-      [DRAFT_STORAGE_KEY]: draftUrl,
-      [CURRENT_STORAGE_KEY]: currentUrl
+      [DRAFT_STORAGE_KEY]: playerValueUrlOne,
+      [CURRENT_STORAGE_KEY]: playerValueUrlTwo
     },
     () => {
       setSaveState(false, "Save settings");
@@ -111,7 +119,7 @@ function resetSettings(): void {
         return;
       }
 
-      showStatus("Settings reset to the default feed URLs.", "success");
+      showStatus("Settings reset to the default Player Value URLs.", "success");
     }
   );
 }
@@ -143,6 +151,10 @@ function isValidUrl(value: string): boolean {
   } catch {
     return false;
   }
+}
+
+function isValidOptionalUrl(value: string): boolean {
+  return !value || isValidUrl(value);
 }
 
 function getRequiredElement<T extends HTMLElement>(id: string): T {

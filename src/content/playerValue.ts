@@ -3,6 +3,8 @@ import type { ErrorResponse, StoredPlayerValues } from "../shared/types";
 const playerLinkPattern = /.*sports\.yahoo\.com\/mlb\/players\/(\d{4,5})$/;
 const playerValueClassName = "player-value";
 const debounceDelay = 500;
+const positiveValueColor = "#16a34a";
+const negativeValueColor = "#dc2626";
 
 let draftValuesMap: Record<string, string> = {};
 let currentValuesMap: Record<string, string> = {};
@@ -83,9 +85,21 @@ function showValues(): void {
 
     const valueTag = document.createElement("span");
     valueTag.className = playerValueClassName;
-    valueTag.textContent = ` ${combinedValue}`;
+    valueTag.append(document.createTextNode(" "));
+
+    for (const value of [draftValue, currentValue].filter((item): item is string => item != null)) {
+      valueTag.appendChild(createValueBadge(value));
+    }
+
     link.appendChild(valueTag);
   }
+}
+
+function createValueBadge(value: string): HTMLSpanElement {
+  const badge = document.createElement("span");
+  badge.textContent = `[${value}]`;
+  badge.style.color = value.startsWith("-") ? negativeValueColor : positiveValueColor;
+  return badge;
 }
 
 function getPlayerValues(): Promise<StoredPlayerValues | ErrorResponse> {
