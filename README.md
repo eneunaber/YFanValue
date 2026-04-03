@@ -11,6 +11,13 @@ Example usage, use one URL for Pre-draft Dollar values and second url for curren
 - Includes an options page for configuring feed URLs
 - Uses Manifest V3, Vite, TypeScript, Tailwind CSS, and Zod
 
+## Screenshots
+
+![YFanValue in action](screenshots/YFanValue1.png)
+![YFanValue in action](screenshots/YFanValue2.png)
+
+*Player values displayed on Yahoo Fantasy Baseball page*
+
 ## Requirements
 
 - Node.js 20.19+ or 22.12+ recommended
