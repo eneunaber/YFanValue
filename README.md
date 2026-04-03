@@ -1,12 +1,12 @@
-# Yahoo Fantasy Player Values
+# YFanValue
 
-Chrome extension for Yahoo Fantasy Baseball pages that injects player dollar values next to player links.  Provide up to two urls that return a structure JSON object with specific values. When you are viewing Player information in Yahoo Fantasy, dollar values from those urls are used and matched by player using YAHOOID. 
+Chrome extension for Yahoo Fantasy Baseball pages that injects player dollar values next to player links.  Provide up to two urls that return a structure JSON object with specific values. When you are viewing Player information in Yahoo Fantasy, dollar values from those urls are used and matched by player using YAHOOID. Negative player values are colored in Red and positive values are colored Green.
 
 Example usage, use one URL for Pre-draft Dollar values and second url for current dollar value of players.  
 
 ## Features
 
-- Fetches draft and current player values from remote JSON feeds
+- Fetches player values from remote JSON feeds
 - Injects values into Yahoo Fantasy Baseball player listings
 - Includes an options page for configuring feed URLs
 - Uses Manifest V3, Vite, TypeScript, Tailwind CSS, and Zod

@@ -1,6 +1,6 @@
 const manifest = {
   manifest_version: 3,
-  name: "Yahoo Player Values",
+  name: "YFanValue",
   description: "Extension to display player values in dollar amounts on Yahoo Fantasy pages",
   version: "0.1.0",
   options_page: "src/options/index.html",
