@@ -20,21 +20,21 @@ void getPlayerValues()
     draftValuesMap = JSON.parse(playerValues.DraftValues) as Record<string, string>;
     currentValuesMap = JSON.parse(playerValues.CurrentValues) as Record<string, string>;
 
-    attachPagingEvents();
+    attachPageObserver();
     showValues();
   })
   .catch((error) => {
     console.error("Failed to retrieve player values:", error);
   });
 
-function attachPagingEvents(): void {
+function attachPageObserver(): void {
   observer?.disconnect();
   observer = null;
 
-  const playersTable = document.getElementById("players-table-wrapper");
+  const pageRoot = document.body ?? document.documentElement;
 
-  if (!playersTable) {
-    console.warn("Players table wrapper not found on page");
+  if (!pageRoot) {
+    console.warn("Page root not found");
     return;
   }
 
@@ -43,7 +43,7 @@ function attachPagingEvents(): void {
     debounceTimer = window.setTimeout(showValues, debounceDelay);
   });
 
-  observer.observe(playersTable, {
+  observer.observe(pageRoot, {
     childList: true,
     subtree: true
   });
