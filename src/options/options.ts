@@ -99,6 +99,7 @@ function resetSettings(): void {
 
 function setSaveState(disabled: boolean, label: string): void {
   saveButton.disabled = disabled;
+  resetButton.disabled = disabled;
   saveButton.textContent = label;
 }
 

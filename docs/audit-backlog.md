@@ -55,7 +55,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ---
 
-### [ ] AUD-003 — Prevent Reset from racing with Save
+### [x] AUD-003 — Prevent Reset from racing with Save
 
 **Problem:** Save disables only the Save button while feed checks run. Clicking Reset before those checks finish writes defaults first, then the delayed Save writes the old URLs back.
 
