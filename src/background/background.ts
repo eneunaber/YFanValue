@@ -1,8 +1,7 @@
-import { CURRENT_VALUES_KEY, DRAFT_VALUES_KEY } from "../shared/config";
 import { loadConfiguredUrlsFromStorage } from "./configuredUrls";
 import { loadPlayerFeeds } from "./playerFeeds";
-import { buildPlayersHash, parsePlayerData } from "../shared/playerData";
-import type { PlayerRecord, StoredPlayerValues } from "../shared/types";
+import { buildPlayersHash, buildStoredPlayerValues, parsePlayerData } from "../shared/playerData";
+import type { PlayerRecord } from "../shared/types";
 
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   if (request?.data !== "fetchPlayerData") {
@@ -16,9 +15,9 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     .then(([draftPlayers, currentPlayers]) => {
       const draftMap = buildPlayersHash(draftPlayers, "draft");
       const currentMap = buildPlayersHash(currentPlayers, "current");
-      return savePlayerData(draftMap, currentMap);
+      return buildStoredPlayerValues(draftMap, currentMap);
     })
-    .then((savedPlayerValues) => sendResponse(savedPlayerValues))
+    .then((playerValues) => sendResponse(playerValues))
     .catch((error: Error) => {
       console.error("Error fetching/processing player data:", error);
       sendResponse({ error: error.message });
@@ -36,25 +35,4 @@ async function fetchPlayerData(url: string, type: "draft" | "current"): Promise<
 
   const data: unknown = await response.json();
   return parsePlayerData(data, type);
-}
-
-function savePlayerData(
-  draftMap: Record<string, string>,
-  currentMap: Record<string, string>
-): Promise<StoredPlayerValues> {
-  const playerValuesTemplate: StoredPlayerValues = {
-    [DRAFT_VALUES_KEY]: JSON.stringify(draftMap),
-    [CURRENT_VALUES_KEY]: JSON.stringify(currentMap)
-  };
-
-  return new Promise((resolve, reject) => {
-    chrome.storage.local.set(playerValuesTemplate, () => {
-      if (chrome.runtime.lastError) {
-        reject(chrome.runtime.lastError);
-        return;
-      }
-
-      resolve(playerValuesTemplate);
-    });
-  });
 }

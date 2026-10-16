@@ -1,4 +1,5 @@
-import { playerDataSchema, type PlayerRecord } from "./types";
+import { CURRENT_VALUES_KEY, DRAFT_VALUES_KEY } from "./config";
+import { playerDataSchema, type PlayerRecord, type StoredPlayerValues } from "./types";
 
 export function parsePlayerData(data: unknown, type: "draft" | "current"): PlayerRecord[] {
   const parsedData = playerDataSchema.safeParse(data);
@@ -38,4 +39,14 @@ export function buildPlayersHash(
   }
 
   return playerMap;
+}
+
+export function buildStoredPlayerValues(
+  draftMap: Record<string, string>,
+  currentMap: Record<string, string>
+): StoredPlayerValues {
+  return {
+    [DRAFT_VALUES_KEY]: JSON.stringify(draftMap),
+    [CURRENT_VALUES_KEY]: JSON.stringify(currentMap)
+  };
 }

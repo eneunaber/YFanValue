@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { buildPlayersHash, parsePlayerData } from "../src/shared/playerData";
+import { buildPlayersHash, buildStoredPlayerValues, parsePlayerData } from "../src/shared/playerData";
 
 describe("parsePlayerData", () => {
   it("accepts valid player arrays", () => {
@@ -77,5 +77,14 @@ describe("buildPlayersHash", () => {
       "1004": "$7"
     });
     expect(warn).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("buildStoredPlayerValues", () => {
+  it("builds the existing serialized message response", () => {
+    expect(buildStoredPlayerValues({ "1001": "$12" }, { "1002": "-$4" })).toEqual({
+      DraftValues: '{"1001":"$12"}',
+      CurrentValues: '{"1002":"-$4"}'
+    });
   });
 });

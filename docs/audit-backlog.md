@@ -136,7 +136,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ---
 
-### [ ] AUD-007 — Remove the unused local-storage write
+### [x] AUD-007 — Remove the unused local-storage write
 
 **Problem:** `src/background/background.ts` writes serialized value maps to `chrome.storage.local`, but no code reads them. A failed write can prevent otherwise valid values from reaching the page.
 
