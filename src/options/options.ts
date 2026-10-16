@@ -13,6 +13,7 @@ const currentValueInput = getRequiredElement<HTMLInputElement>("currentValueUrl"
 const saveButton = getRequiredElement<HTMLButtonElement>("save");
 const resetButton = getRequiredElement<HTMLButtonElement>("reset");
 const statusDiv = getRequiredElement<HTMLDivElement>("status");
+let statusTimer: number | undefined;
 
 document.addEventListener("DOMContentLoaded", loadSettings);
 saveButton.addEventListener("click", validateAndSaveSettings);
@@ -104,6 +105,7 @@ function setSaveState(disabled: boolean, label: string): void {
 }
 
 function showStatus(message: string, type: "success" | "error"): void {
+  window.clearTimeout(statusTimer);
   statusDiv.textContent = message;
   statusDiv.className =
     "rounded-2xl border px-4 py-3 text-sm font-medium " +
@@ -112,8 +114,9 @@ function showStatus(message: string, type: "success" | "error"): void {
       : "block border-rose-400/30 bg-rose-400/10 text-rose-100");
 
   if (type === "success") {
-    window.setTimeout(() => {
+    statusTimer = window.setTimeout(() => {
       statusDiv.className = "hidden rounded-2xl border px-4 py-3 text-sm font-medium";
+      statusTimer = undefined;
     }, 3000);
   }
 }

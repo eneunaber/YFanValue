@@ -198,7 +198,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ---
 
-### [ ] AUD-010 — Prevent an old status timer from hiding a new message
+### [x] AUD-010 — Prevent an old status timer from hiding a new message
 
 **Problem:** A success message schedules the status box to hide after three seconds. If a later error is displayed before that timer fires, the old timer hides the new error.
 
