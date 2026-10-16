@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { buildPlayerValueRenderModel, shouldUpdatePlayerValue } from "../src/content/playerValueRender";
+import {
+  buildPlayerValueRenderModel,
+  hasExternalPageMutations,
+  shouldUpdatePlayerValue
+} from "../src/content/playerValueRender";
 
 describe("buildPlayerValueRenderModel", () => {
   it("renders positive and negative values with the expected colors", () => {
@@ -32,5 +36,32 @@ describe("shouldUpdatePlayerValue", () => {
 
   it("returns true when the rendered value has changed", () => {
     expect(shouldUpdatePlayerValue(" [$12]", "[$12][-$4]")).toBe(true);
+  });
+});
+
+describe("hasExternalPageMutations", () => {
+  const playerValueNode = {
+    classList: { contains: (className: string) => className === "player-value" }
+  };
+  const yahooNode = {
+    classList: { contains: () => false }
+  };
+
+  it("ignores mutations containing only player value nodes", () => {
+    expect(
+      hasExternalPageMutations(
+        [{ addedNodes: [playerValueNode], removedNodes: [playerValueNode] }],
+        "player-value"
+      )
+    ).toBe(false);
+  });
+
+  it("keeps mutations containing Yahoo page nodes", () => {
+    expect(
+      hasExternalPageMutations(
+        [{ addedNodes: [playerValueNode, yahooNode], removedNodes: [] }],
+        "player-value"
+      )
+    ).toBe(true);
   });
 });

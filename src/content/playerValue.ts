@@ -1,6 +1,10 @@
 import type { ErrorResponse, StoredPlayerValues } from "../shared/types";
 import { getYahooPlayerIdFromUrl } from "../shared/yahooPlayerId";
-import { buildPlayerValueRenderModel, shouldUpdatePlayerValue } from "./playerValueRender";
+import {
+  buildPlayerValueRenderModel,
+  hasExternalPageMutations,
+  shouldUpdatePlayerValue
+} from "./playerValueRender";
 
 const playerValueClassName = "player-value";
 const debounceDelay = 500;
@@ -38,7 +42,11 @@ function attachPageObserver(): void {
     return;
   }
 
-  observer = new MutationObserver(() => {
+  observer = new MutationObserver((mutations) => {
+    if (!hasExternalPageMutations(mutations, playerValueClassName)) {
+      return;
+    }
+
     window.clearTimeout(debounceTimer);
     debounceTimer = window.setTimeout(showValues, debounceDelay);
   });

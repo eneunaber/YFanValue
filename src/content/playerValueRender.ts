@@ -31,3 +31,23 @@ export function buildPlayerValueRenderModel(
 export function shouldUpdatePlayerValue(existingText: string | null, combinedText: string): boolean {
   return Boolean(combinedText) && existingText !== ` ${combinedText}`;
 }
+
+interface ChildMutationLike {
+  addedNodes: ArrayLike<unknown>;
+  removedNodes: ArrayLike<unknown>;
+}
+
+export function hasExternalPageMutations(
+  mutations: ArrayLike<ChildMutationLike>,
+  playerValueClassName: string
+): boolean {
+  return Array.from(mutations).some(({ addedNodes, removedNodes }) =>
+    [...Array.from(addedNodes), ...Array.from(removedNodes)].some(
+      (node) => !hasClass(node, playerValueClassName)
+    )
+  );
+}
+
+function hasClass(node: unknown, className: string): boolean {
+  return (node as { classList?: { contains(value: string): boolean } } | null)?.classList?.contains(className) ?? false;
+}

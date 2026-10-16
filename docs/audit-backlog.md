@@ -217,7 +217,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ## Nice to have
 
-### [ ] AUD-011 — Ignore DOM mutations created by the extension
+### [x] AUD-011 — Ignore DOM mutations created by the extension
 
 **Problem:** Inserting `.player-value` spans triggers the extension's own page observer. That schedules an unnecessary second scan of every link after each render.
 
