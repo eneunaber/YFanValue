@@ -14,7 +14,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ## Must fix
 
-### [ ] AUD-001 — Validate the feed body before saving its URL
+### [x] AUD-001 — Validate the feed body before saving its URL
 
 **Problem:** `src/options/options.ts` treats a successful `HEAD` response as proof that a feed is usable. A URL can return `200` to `HEAD` and still return HTML, malformed JSON, or the wrong JSON shape to `GET`. The options page then reports success, but the extension fails on the next Yahoo page load.
 

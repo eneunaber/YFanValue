@@ -6,7 +6,7 @@ import {
   DEFAULT_DRAFT_URL,
   DRAFT_STORAGE_KEY
 } from "../shared/config";
-import { getUrlsToTest, validatePlayerValueUrls } from "./urlValidation";
+import { getUrlsToTest, testPlayerValueUrl, validatePlayerValueUrls } from "./urlValidation";
 
 const draftValueInput = getRequiredElement<HTMLInputElement>("draftValueUrl");
 const currentValueInput = getRequiredElement<HTMLInputElement>("currentValueUrl");
@@ -45,31 +45,15 @@ function validateAndSaveSettings(): void {
 
   setSaveState(true, "Testing URLs...");
 
-  Promise.all(getUrlsToTest(playerValueUrlOne, playerValueUrlTwo).map((url) => testUrl(url)))
+  Promise.all(
+    getUrlsToTest(playerValueUrlOne, playerValueUrlTwo).map(({ url, type }) => testPlayerValueUrl(url, type))
+  )
     .then(() => performSave(playerValueUrlOne, playerValueUrlTwo))
     .catch((error: Error) => {
       console.error("Error validating URLs:", error);
       showStatus(`URL validation failed: ${error.message}`, "error");
       setSaveState(false, "Save settings");
     });
-}
-
-async function testUrl(url: string): Promise<void> {
-  try {
-    const headResponse = await fetch(url, { method: "HEAD" });
-
-    if (headResponse.ok) {
-      return;
-    }
-  } catch {
-    // Fall through to a GET request for servers that do not support HEAD.
-  }
-
-  const getResponse = await fetch(url);
-
-  if (!getResponse.ok) {
-    throw new Error(`HTTP ${getResponse.status} for ${url}`);
-  }
 }
 
 function performSave(playerValueUrlOne: string, playerValueUrlTwo: string): void {
