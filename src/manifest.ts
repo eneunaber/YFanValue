@@ -21,7 +21,6 @@ const manifest = {
     }
   ],
   host_permissions: [
-    "https://prod-elneunie-fantasybaseballleaguestats.s3.us-east-2.amazonaws.com/*",
     "https://*/*",
     "http://localhost/*"
   ],

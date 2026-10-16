@@ -236,7 +236,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ---
 
-### [ ] AUD-012 — Remove small redundant pieces
+### [x] AUD-012 — Remove small redundant pieces
 
 **Problem:** The explicit S3 host permission is already covered by `https://*/*`; `getUrlsToTest` wraps a filter used once; and `showValues` is exported but never imported.
 

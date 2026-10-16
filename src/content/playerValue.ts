@@ -117,5 +117,3 @@ function getPlayerValues(): Promise<StoredPlayerValues | ErrorResponse> {
     });
   });
 }
-
-export { showValues };

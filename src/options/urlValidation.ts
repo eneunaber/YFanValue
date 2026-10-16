@@ -1,11 +1,6 @@
 import { parsePlayerData } from "../shared/playerData";
 import { PLAYER_DATA_FETCH_TIMEOUT_MS } from "../shared/config";
 
-export interface PlayerValueUrlToTest {
-  type: "draft" | "current";
-  url: string;
-}
-
 export function validatePlayerValueUrls(playerValueUrlOne: string, playerValueUrlTwo: string): string | null {
   if (!playerValueUrlOne && !playerValueUrlTwo) {
     return "Please enter at least one valid URL.";
@@ -16,13 +11,6 @@ export function validatePlayerValueUrls(playerValueUrlOne: string, playerValueUr
   }
 
   return null;
-}
-
-export function getUrlsToTest(playerValueUrlOne: string, playerValueUrlTwo: string): PlayerValueUrlToTest[] {
-  return [
-    { url: playerValueUrlOne, type: "draft" as const },
-    { url: playerValueUrlTwo, type: "current" as const }
-  ].filter(({ url }) => Boolean(url));
 }
 
 export async function testPlayerValueUrl(url: string, type: "draft" | "current"): Promise<void> {

@@ -6,7 +6,7 @@ import {
   DEFAULT_DRAFT_URL,
   DRAFT_STORAGE_KEY
 } from "../shared/config";
-import { getUrlsToTest, testPlayerValueUrl, validatePlayerValueUrls } from "./urlValidation";
+import { testPlayerValueUrl, validatePlayerValueUrls } from "./urlValidation";
 
 const draftValueInput = getRequiredElement<HTMLInputElement>("draftValueUrl");
 const currentValueInput = getRequiredElement<HTMLInputElement>("currentValueUrl");
@@ -46,9 +46,10 @@ function validateAndSaveSettings(): void {
 
   setSaveState(true, "Testing URLs...");
 
-  Promise.all(
-    getUrlsToTest(playerValueUrlOne, playerValueUrlTwo).map(({ url, type }) => testPlayerValueUrl(url, type))
-  )
+  Promise.all([
+    playerValueUrlOne ? testPlayerValueUrl(playerValueUrlOne, "draft") : Promise.resolve(),
+    playerValueUrlTwo ? testPlayerValueUrl(playerValueUrlTwo, "current") : Promise.resolve()
+  ])
     .then(() => performSave(playerValueUrlOne, playerValueUrlTwo))
     .catch((error: Error) => {
       console.error("Error validating URLs:", error);
