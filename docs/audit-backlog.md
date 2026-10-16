@@ -176,7 +176,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ---
 
-### [ ] AUD-009 — Test the background message flow
+### [x] AUD-009 — Test the background message flow
 
 **Problem:** Existing tests cover pure helpers but never exercise the extension's main message handler. A regression that swaps draft and current values, breaks `sendResponse`, or mishandles a feed failure could leave all tests green.
 
