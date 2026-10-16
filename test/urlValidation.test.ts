@@ -61,7 +61,9 @@ describe("testPlayerValueUrl", () => {
 
     await expect(testPlayerValueUrl("https://example.com/feed.json", "draft")).resolves.toBeUndefined();
     expect(fetchMock).toHaveBeenCalledOnce();
-    expect(fetchMock).toHaveBeenCalledWith("https://example.com/feed.json");
+    expect(fetchMock).toHaveBeenCalledWith("https://example.com/feed.json", {
+      signal: expect.any(AbortSignal)
+    });
   });
 
   it("rejects a response that is not JSON", async () => {

@@ -113,7 +113,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ---
 
-### [ ] AUD-006 — Give feed requests a deadline
+### [x] AUD-006 — Give feed requests a deadline
 
 **Problem:** Feed requests in the options page and background worker have no timeout. A server that accepts a connection but never finishes can leave the settings page on "Testing URLs..." and prevent player values from loading for a long time.
 

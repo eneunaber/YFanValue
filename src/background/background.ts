@@ -1,5 +1,6 @@
 import { loadConfiguredUrlsFromStorage } from "./configuredUrls";
 import { loadPlayerFeeds } from "./playerFeeds";
+import { PLAYER_DATA_FETCH_TIMEOUT_MS } from "../shared/config";
 import { buildPlayersHash, buildStoredPlayerValues, parsePlayerData } from "../shared/playerData";
 import type { PlayerRecord } from "../shared/types";
 
@@ -27,7 +28,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 });
 
 async function fetchPlayerData(url: string, type: "draft" | "current"): Promise<PlayerRecord[]> {
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(PLAYER_DATA_FETCH_TIMEOUT_MS) });
 
   if (!response.ok) {
     throw new Error(`${type} URL HTTP error: ${response.status}`);

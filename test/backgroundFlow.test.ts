@@ -84,6 +84,12 @@ describe("background player-data message flow", () => {
       DraftValues: '{"1001":"$12"}',
       CurrentValues: '{"1002":"-$4"}'
     });
+    expect(fetchMock).toHaveBeenNthCalledWith(1, "https://example.com/draft.json", {
+      signal: expect.any(AbortSignal)
+    });
+    expect(fetchMock).toHaveBeenNthCalledWith(2, "https://example.com/current.json", {
+      signal: expect.any(AbortSignal)
+    });
   });
 
   it("returns the successful feed when the other configured feed fails", async () => {

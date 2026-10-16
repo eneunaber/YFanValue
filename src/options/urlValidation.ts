@@ -1,4 +1,5 @@
 import { parsePlayerData } from "../shared/playerData";
+import { PLAYER_DATA_FETCH_TIMEOUT_MS } from "../shared/config";
 
 export interface PlayerValueUrlToTest {
   type: "draft" | "current";
@@ -25,7 +26,7 @@ export function getUrlsToTest(playerValueUrlOne: string, playerValueUrlTwo: stri
 }
 
 export async function testPlayerValueUrl(url: string, type: "draft" | "current"): Promise<void> {
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(PLAYER_DATA_FETCH_TIMEOUT_MS) });
 
   if (!response.ok) {
     throw new Error(`${type} URL HTTP error: ${response.status}`);
