@@ -41,6 +41,18 @@ describe("parsePlayerData", () => {
       "Invalid current player data: 0.Dollars:"
     );
   });
+
+  it("rejects Yahoo player IDs that cannot match supported links", () => {
+    expect(() => parsePlayerData([{ YAHOOID: "player-one", Dollars: 15 }], "draft")).toThrow(
+      "Invalid draft player data: 0.YAHOOID:"
+    );
+    expect(() => parsePlayerData([{ YAHOOID: -1234, Dollars: 15 }], "draft")).toThrow(
+      "Invalid draft player data: 0.YAHOOID:"
+    );
+    expect(() => parsePlayerData([{ YAHOOID: "123456", Dollars: 15 }], "draft")).toThrow(
+      "Invalid draft player data: 0.YAHOOID:"
+    );
+  });
 });
 
 describe("buildPlayersHash", () => {

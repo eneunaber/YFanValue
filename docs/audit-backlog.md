@@ -155,7 +155,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ---
 
-### [ ] AUD-008 — Reject Yahoo player IDs that cannot match a link
+### [x] AUD-008 — Reject Yahoo player IDs that cannot match a link
 
 **Problem:** The feed schema accepts any non-empty string or integer as `YAHOOID`, while the content script only matches four- or five-digit player IDs. Values such as `"player-one"` pass validation but can never render.
 

@@ -1,7 +1,7 @@
 import type { ErrorResponse, StoredPlayerValues } from "../shared/types";
+import { getYahooPlayerIdFromUrl } from "../shared/yahooPlayerId";
 import { buildPlayerValueRenderModel, shouldUpdatePlayerValue } from "./playerValueRender";
 
-const playerLinkPattern = /.*sports\.yahoo\.com\/mlb\/players\/(\d{4,5})$/;
 const playerValueClassName = "player-value";
 const debounceDelay = 500;
 
@@ -57,13 +57,12 @@ function showValues(): void {
   const playerLinks = document.querySelectorAll<HTMLAnchorElement>("a[href]");
 
   for (const link of playerLinks) {
-    const match = link.href.match(playerLinkPattern);
+    const playerId = getYahooPlayerIdFromUrl(link.href);
 
-    if (!match) {
+    if (!playerId) {
       continue;
     }
 
-    const playerId = match[1];
     const draftValue = draftValuesMap[playerId];
     const currentValue = currentValuesMap[playerId];
 

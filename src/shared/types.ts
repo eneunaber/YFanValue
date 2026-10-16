@@ -1,6 +1,10 @@
 import { z } from "zod";
+import { YAHOO_PLAYER_ID_PATTERN } from "./yahooPlayerId";
 
-const yahooIdSchema = z.union([z.string().trim().min(1), z.number().int()]);
+const yahooIdSchema = z.union([
+  z.string().trim().regex(YAHOO_PLAYER_ID_PATTERN, "Yahoo player ID must be 4 or 5 digits"),
+  z.number().int().min(1000).max(99999)
+]);
 const dollarsSchema = z
   .union([z.number().finite(), z.string().trim().min(1)])
   .refine((value) => Number.isFinite(Number(value)), "Dollars must be numeric");
