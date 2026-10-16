@@ -74,7 +74,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ---
 
-### [ ] AUD-004 — Make URL validation match host permissions
+### [x] AUD-004 — Make URL validation match host permissions
 
 **Problem:** The options page accepts every HTTP URL, but `src/manifest.ts` permits plain HTTP only on `localhost`. For example, `http://example.com/feed.json` passes format validation and then fails because Chrome blocks the request.
 

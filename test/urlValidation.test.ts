@@ -15,14 +15,21 @@ describe("validatePlayerValueUrls", () => {
     expect(validatePlayerValueUrls("https://example.com/one.json", "")).toBeNull();
   });
 
+  it("allows an HTTP localhost URL", () => {
+    expect(validatePlayerValueUrls("http://localhost:5173/feed.json", "")).toBeNull();
+  });
+
   it("rejects when both URLs are blank", () => {
     expect(validatePlayerValueUrls("", "")).toBe("Please enter at least one valid URL.");
   });
 
   it("rejects invalid URLs", () => {
-    expect(validatePlayerValueUrls("notaurl", "")).toBe("Please enter valid http or https URLs.");
+    const expectedError = "Please enter valid https URLs or http://localhost URLs.";
+
+    expect(validatePlayerValueUrls("notaurl", "")).toBe(expectedError);
+    expect(validatePlayerValueUrls("http://example.com/feed.json", "")).toBe(expectedError);
     expect(validatePlayerValueUrls("", "ftp://example.com/feed.json")).toBe(
-      "Please enter valid http or https URLs."
+      expectedError
     );
   });
 });

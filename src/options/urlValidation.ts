@@ -11,7 +11,7 @@ export function validatePlayerValueUrls(playerValueUrlOne: string, playerValueUr
   }
 
   if (!isValidOptionalUrl(playerValueUrlOne) || !isValidOptionalUrl(playerValueUrlTwo)) {
-    return "Please enter valid http or https URLs.";
+    return "Please enter valid https URLs or http://localhost URLs.";
   }
 
   return null;
@@ -49,7 +49,7 @@ export function isValidOptionalUrl(value: string): boolean {
 function isValidUrl(value: string): boolean {
   try {
     const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:";
+    return url.protocol === "https:" || (url.protocol === "http:" && url.hostname === "localhost");
   } catch {
     return false;
   }
