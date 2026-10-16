@@ -94,7 +94,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ## Should fix
 
-### [ ] AUD-005 — Do not render negative zero
+### [x] AUD-005 — Do not render negative zero
 
 **Problem:** A valid value such as `-0.4` is classified as negative before rounding and renders as `-$0`, while `0.4` renders as `$0`.
 

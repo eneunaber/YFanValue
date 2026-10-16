@@ -61,6 +61,23 @@ describe("buildPlayersHash", () => {
     });
   });
 
+  it("formats values that round to zero without a negative sign", () => {
+    expect(
+      buildPlayersHash(
+        [
+          { YAHOOID: 1001, Dollars: -0.4 },
+          { YAHOOID: 1002, Dollars: 0.4 },
+          { YAHOOID: 1003, Dollars: -0.6 }
+        ],
+        "current"
+      )
+    ).toEqual({
+      "1001": "$0",
+      "1002": "$0",
+      "1003": "-$1"
+    });
+  });
+
   it("skips rows with non-numeric values if invalid data bypasses parsing", () => {
     const warn = vi.fn();
 

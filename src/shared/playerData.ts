@@ -29,12 +29,14 @@ export function buildPlayersHash(
       continue;
     }
 
-    if (dollars > 0) {
-      playerMap[yahooId] = `$${dollars.toFixed(0)}`;
-    } else if (dollars < 0) {
-      playerMap[yahooId] = `-$${Math.abs(dollars).toFixed(0)}`;
-    } else {
+    const absoluteDollars = Math.abs(dollars).toFixed(0);
+
+    if (absoluteDollars === "0") {
       playerMap[yahooId] = "$0";
+    } else if (dollars > 0) {
+      playerMap[yahooId] = `$${absoluteDollars}`;
+    } else {
+      playerMap[yahooId] = `-$${absoluteDollars}`;
     }
   }
 
