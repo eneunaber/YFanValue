@@ -35,7 +35,7 @@ Actionable stories from the Ponytail repository audit. This file is the source o
 
 ---
 
-### [ ] AUD-002 — Keep the good feed when the other feed fails
+### [x] AUD-002 — Keep the good feed when the other feed fails
 
 **Problem:** `Promise.all` in `src/background/background.ts` rejects the entire operation when either configured feed fails. A working draft feed therefore disappears when the current-value feed is temporarily unavailable, and vice versa.
 

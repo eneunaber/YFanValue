@@ -1,5 +1,6 @@
 import { CURRENT_VALUES_KEY, DRAFT_VALUES_KEY } from "../shared/config";
 import { loadConfiguredUrlsFromStorage } from "./configuredUrls";
+import { loadPlayerFeeds } from "./playerFeeds";
 import { buildPlayersHash, parsePlayerData } from "../shared/playerData";
 import type { PlayerRecord, StoredPlayerValues } from "../shared/types";
 
@@ -10,10 +11,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 
   loadConfiguredUrlsFromStorage(chrome.storage.sync, chrome.runtime)
     .then(({ draftValueUrl, currentValueUrl }) =>
-      Promise.all([
-        fetchOptionalPlayerData(draftValueUrl, "draft"),
-        fetchOptionalPlayerData(currentValueUrl, "current")
-      ])
+      loadPlayerFeeds(draftValueUrl, currentValueUrl, fetchPlayerData)
     )
     .then(([draftPlayers, currentPlayers]) => {
       const draftMap = buildPlayersHash(draftPlayers, "draft");
@@ -28,14 +26,6 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 
   return true;
 });
-
-function fetchOptionalPlayerData(url: string, type: "draft" | "current"): Promise<PlayerRecord[]> {
-  if (!url) {
-    return Promise.resolve([]);
-  }
-
-  return fetchPlayerData(url, type);
-}
 
 async function fetchPlayerData(url: string, type: "draft" | "current"): Promise<PlayerRecord[]> {
   const response = await fetch(url);
