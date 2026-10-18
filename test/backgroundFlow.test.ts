@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { PLAYER_DATA_FETCH_TIMEOUT_MS } from "../src/shared/config";
+
 type MessageListener = (
   request: unknown,
   sender: unknown,
@@ -110,6 +112,41 @@ describe("background player-data message flow", () => {
       DraftValues: '{"1001":"$12"}',
       CurrentValues: "{}"
     });
+  });
+
+  it("returns the successful feed when the other configured feed times out", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const controllers = [new AbortController(), new AbortController()];
+    const timeout = vi
+      .spyOn(AbortSignal, "timeout")
+      .mockReturnValueOnce(controllers[0].signal)
+      .mockReturnValueOnce(controllers[1].signal);
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(playerResponse("1001", 12))
+      .mockImplementationOnce((_url: string, options: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          options.signal?.addEventListener("abort", () => reject(options.signal?.reason));
+        })
+      );
+    const { listener } = await loadBackground(
+      {
+        draftValueUrl: "https://example.com/draft.json",
+        currentValueUrl: "https://example.com/current.json"
+      },
+      fetchMock
+    );
+
+    const response = sendFetchPlayerData(listener);
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+    controllers[1].abort(new Error("request timed out"));
+
+    await expect(response).resolves.toEqual({
+      DraftValues: '{"1001":"$12"}',
+      CurrentValues: "{}"
+    });
+    expect(timeout).toHaveBeenNthCalledWith(1, PLAYER_DATA_FETCH_TIMEOUT_MS);
+    expect(timeout).toHaveBeenNthCalledWith(2, PLAYER_DATA_FETCH_TIMEOUT_MS);
   });
 
   it("returns an error when every configured feed fails", async () => {
