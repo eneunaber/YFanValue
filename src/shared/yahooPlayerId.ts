@@ -1,4 +1,4 @@
-export const YAHOO_PLAYER_ID_PATTERN = /^\d{4,5}$/;
+export const YAHOO_PLAYER_ID_PATTERN = /^\d{4,7}$/;
 
 const yahooPlayerPathPattern = /^\/mlb\/players\/([^/]+)$/;
 

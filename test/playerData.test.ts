@@ -7,14 +7,16 @@ describe("parsePlayerData", () => {
     const result = parsePlayerData(
       [
         { YAHOOID: 1234, Dollars: 15 },
-        { YAHOOID: "5678", Dollars: "-3" }
+        { YAHOOID: "5678", Dollars: "-3" },
+        { YAHOOID: "1000002", Dollars: 38 }
       ],
       "draft"
     );
 
     expect(result).toEqual([
       { YAHOOID: 1234, Dollars: 15 },
-      { YAHOOID: "5678", Dollars: "-3" }
+      { YAHOOID: "5678", Dollars: "-3" },
+      { YAHOOID: "1000002", Dollars: 38 }
     ]);
   });
 
@@ -49,7 +51,10 @@ describe("parsePlayerData", () => {
     expect(() => parsePlayerData([{ YAHOOID: -1234, Dollars: 15 }], "draft")).toThrow(
       "Invalid draft player data: 0.YAHOOID:"
     );
-    expect(() => parsePlayerData([{ YAHOOID: "123456", Dollars: 15 }], "draft")).toThrow(
+    expect(() => parsePlayerData([{ YAHOOID: "123", Dollars: 15 }], "draft")).toThrow(
+      "Invalid draft player data: 0.YAHOOID:"
+    );
+    expect(() => parsePlayerData([{ YAHOOID: "12345678", Dollars: 15 }], "draft")).toThrow(
       "Invalid draft player data: 0.YAHOOID:"
     );
   });
