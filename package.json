@@ -10,7 +10,12 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "security": "npm run security:dependencies && npm run security:signatures && npm run security:secrets && npm run security:code",
+    "security:dependencies": "npm audit --audit-level=moderate",
+    "security:signatures": "npm audit signatures",
+    "security:secrets": "gitleaks git --redact .",
+    "security:code": "semgrep scan --config auto ."
   },
   "dependencies": {
     "zod": "^4.4.3"

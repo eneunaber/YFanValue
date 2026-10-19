@@ -57,6 +57,29 @@ Create a production build:
 npm run build
 ```
 
+## Security Checks
+
+Install [Gitleaks](https://github.com/gitleaks/gitleaks) and
+[Semgrep](https://semgrep.dev/docs/getting-started/) and make sure both commands
+are available on your `PATH`.
+
+Run the complete local security baseline:
+
+```bash
+npm run security
+```
+
+This checks dependencies for known vulnerabilities, verifies npm package
+signatures and provenance, scans Git history for secrets, and analyzes the
+source code for security issues. Run an individual check with one of:
+
+```bash
+npm run security:dependencies
+npm run security:signatures
+npm run security:secrets
+npm run security:code
+```
+
 ## Load The Extension
 
 1. Run `npm run build`.
