@@ -57,6 +57,10 @@ Create a production build:
 npm run build
 ```
 
+GitHub Actions runs the tests, type checker, build, and security checks for
+pull requests and pushes to `main`. Successful runs include a downloadable
+`yfan-value` ZIP artifact that is retained for 14 days.
+
 ## Security Checks
 
 Install [Gitleaks](https://github.com/gitleaks/gitleaks) and
